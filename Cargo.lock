@@ -110,9 +110,9 @@ dependencies = [
 
 [[package]]
 name = "gmpmee-sys"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9d1d55b889435ba3cc09cfee88ff52ffc37e26841bf363e821dc7d5a49cb7b67"
+checksum = "19f4ed749d06fbad55851554da3e1d0983a35a1cead28dde74a62fb5ed2a5e57"
 dependencies = [
  "cc",
  "dirs",
@@ -251,7 +251,7 @@ dependencies = [
 
 [[package]]
 name = "rug-gmpmee"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "gmpmee-sys",
  "rayon",
