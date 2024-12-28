@@ -4,12 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-gmpmee-sys = { path = "../gmpmee-sys" }
+gmpmee-sys = "0.1.0"
+#gmpmee-sys = { path = "../gmpmee-sys" }
 rug = { version = "1.6.4", features = ["rand"] }
 thiserror = "2"
 
 [dev-dependencies]
-rug-miller-rabin="0.1"
-rayon="1"
-
-
+rug-miller-rabin = "0.1"
+rayon = "1"
