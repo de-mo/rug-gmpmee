@@ -1,0 +1,24 @@
+use criterion::{criterion_group, criterion_main, Criterion};
+use rug::{rand::RandState, Integer};
+use rug_gmpmee::fpowm::FPowmTable;
+
+fn bench_fpowns(c: &mut Criterion) {
+    let mut group = c.benchmark_group("fpown");
+    let p =  Integer::from(Integer::parse_radix(
+        "CE9E0307D2AE75BDBEEC3E0A6E71A279417B56C955C602FFFD067586BACFDAC3BCC49A49EB4D126F5E9255E57C14F3E09492B6496EC8AC1366FC4BB7F678573FA2767E6547FA727FC0E631AA6F155195C035AF7273F31DFAE1166D1805C8522E95F9AF9CE33239BF3B68111141C20026673A6C8B9AD5FA8372ED716799FE05C0BB6EAF9FCA1590BD9644DBEFAA77BA01FD1C0D4F2D53BAAE965B1786EC55961A8E2D3E4FE8505914A408D50E6B99B71CDA78D8F9AF1A662512F8C4C3A9E72AC72D40AE5D4A0E6571135CBBAAE08C7A2AA0892F664549FA7EEC81BA912743F3E584AC2B2092243C4A17EC98DF079D8EECB8B885E6BBAFA452AAFA8CB8C08024EFF28DE4AF4AC710DCD3D66FD88212101BCB412BCA775F94A2DCE18B1A6452D4CF818B6D099D4505E0040C57AE1F3E84F2F8E07A69C0024C05ACE05666A6B63B0695904478487E78CD0704C14461F24636D7A3F267A654EEDCF8789C7F627C72B4CBD54EED6531C0E54E325D6F09CB648AE9185A7BDA6553E40B125C78E5EAA867", 16
+    ).unwrap());
+    let mut rand = RandState::new();
+    let base = Integer::from(Integer::random_bits(2048, &mut rand));
+    let exp = Integer::from(Integer::random_bits(1024, &mut rand));
+    let tab = FPowmTable::init_precomp(&base, &p, 16, 1024).unwrap();
+
+    group.bench_function("rug", |b| {
+        b.iter(|| Integer::from(base.pow_mod_ref(&exp, &p).unwrap()))
+    });
+    group.bench_function("gmpmee", |b| b.iter(|| tab.fpowm(&exp)));
+
+    group.finish();
+}
+
+criterion_group!(benches, bench_fpowns);
+criterion_main!(benches);
