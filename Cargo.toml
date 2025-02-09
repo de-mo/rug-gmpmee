@@ -12,8 +12,8 @@ repository = "https://github.com/de-mo/rug-gmpmee"
 rust-version = "1.83"
 
 [dependencies]
-#gmpmee-sys = "0.1.1"
-gmpmee-sys = { path = "../gmpmee-sys" }
+gmpmee-sys = "0.1.2"
+#gmpmee-sys = { path = "../gmpmee-sys" }
 rug = { version = "1", features = ["rand"] }
 thiserror = "2"
 
