@@ -35,18 +35,14 @@
 pub mod fpowm;
 pub mod miller_rabin;
 pub mod spown;
-
+use fpowm::FPownError;
+use spown::SPownError;
 use thiserror::Error;
 
 #[derive(Error, Debug, Clone, PartialEq, Eq)]
 pub enum GmpMEEError {
-    #[error("Error in parameters of spowm: {0}")]
-    /// Error in the parameters of spowm
-    SPowmParameters(String),
-    #[error("Error in parameters of fpowm: {0}")]
-    /// Error in the parameters of fpwon and related functions
-    FPowmParameters(String),
-    #[error("Error with cache fpowm: {0}")]
-    /// Error in the cache function
-    FPowmCache(String),
+    #[error("Error in parameters of spowm")]
+    SPowmParameters(#[from] SPownError),
+    #[error("Error in parameters of fpown: {0}")]
+    FPowmParameters(#[from] FPownError),
 }

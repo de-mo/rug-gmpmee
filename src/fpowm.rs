@@ -51,6 +51,17 @@ use gmpmee_sys::{
 };
 use rug::Integer;
 use std::sync::OnceLock;
+use thiserror::Error;
+
+#[derive(Error, Debug, Clone, PartialEq, Eq)]
+pub enum FPownError {
+    #[error("{variable} cannot be casted to i64 (in {method}): {source}")]
+    ExponentCast {
+        method: &'static str,
+        variable: &'static str,
+        source: std::num::TryFromIntError,
+    },
+}
 
 /// Structure containing the structure of the table to precompute of fixed-sized modulo exponential
 ///
@@ -79,18 +90,22 @@ impl FPowmTable {
         block_width: usize,
         exponent_bitlen: usize,
     ) -> Result<Self, GmpMEEError> {
-        let block_width_i64: i64 = block_width.try_into().map_err(|e| {
-            GmpMEEError::FPowmParameters(format!(
-                "block_width cannot be casted to i64 (in init): {}",
-                e
-            ))
-        })?;
-        let exponent_bitlen_i64: i64 = exponent_bitlen.try_into().map_err(|e| {
-            GmpMEEError::FPowmParameters(format!(
-                "exponent_bitlen cannot be casted to i64 (in init): {}",
-                e
-            ))
-        })?;
+        let block_width_i64: i64 =
+            block_width
+                .try_into()
+                .map_err(|e| FPownError::ExponentCast {
+                    method: "FPowmTable::init",
+                    variable: "block_width",
+                    source: e,
+                })?;
+        let exponent_bitlen_i64: i64 =
+            exponent_bitlen
+                .try_into()
+                .map_err(|e| FPownError::ExponentCast {
+                    method: "FPowmTable::init",
+                    variable: "exponent_bitlen",
+                    source: e,
+                })?;
         unsafe {
             let mut tab = get_empty_gmpmee_fpowm_tab();
             let t_ptr = &mut tab;
@@ -111,18 +126,22 @@ impl FPowmTable {
         block_width: usize,
         exponent_bitlen: usize,
     ) -> Result<Self, GmpMEEError> {
-        let block_width_i64: i64 = block_width.try_into().map_err(|e| {
-            GmpMEEError::FPowmParameters(format!(
-                "block_width cannot be casted to i64 (in init): {}",
-                e
-            ))
-        })?;
-        let exponent_bitlen_i64: i64 = exponent_bitlen.try_into().map_err(|e| {
-            GmpMEEError::FPowmParameters(format!(
-                "exponent_bitlen cannot be casted to i64 (in init): {}",
-                e
-            ))
-        })?;
+        let block_width_i64: i64 =
+            block_width
+                .try_into()
+                .map_err(|e| FPownError::ExponentCast {
+                    method: "FPowmTable::init_precomp",
+                    variable: "block_width",
+                    source: e,
+                })?;
+        let exponent_bitlen_i64: i64 =
+            exponent_bitlen
+                .try_into()
+                .map_err(|e| FPownError::ExponentCast {
+                    method: "FPowmTable::init_precomp",
+                    variable: "exponent_bitlen",
+                    source: e,
+                })?;
         unsafe {
             let mut tab = get_empty_gmpmee_fpowm_tab();
             let t_ptr = &mut tab;
