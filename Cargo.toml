@@ -1,7 +1,8 @@
 [package]
 name = "rug-gmpmee"
 version = "0.1.4"
-edition = "2021"
+edition = "2024"
+rust-version = "1.90"
 categories = ["mathematics", "cryptography"]
 description = "Rust FFI bindings for GMPMEE"
 documentation = "https://docs.rs/rug-gmpmee"
@@ -9,18 +10,17 @@ keywords = ["bignum", "gmp", "gmpmee", "math", "numerics"]
 license = "LGPL-3.0+"
 readme = "README.md"
 repository = "https://github.com/de-mo/rug-gmpmee"
-rust-version = "1.83"
 
 [dependencies]
-gmpmee-sys = "0.1.3"
-#gmpmee-sys = { path = "../gmpmee-sys" }
+#gmpmee-sys = "0.1.3"
+gmpmee-sys = { path = "../gmpmee-sys" }
 rug = { version = "1", features = ["rand"] }
 thiserror = "2"
 
 [dev-dependencies]
 rug-miller-rabin = "0.1"
 rayon = "1"
-criterion = "0.6"
+criterion = "0.7"
 
 [[bench]]
 name = "spowm"
