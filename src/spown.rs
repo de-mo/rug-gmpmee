@@ -15,7 +15,7 @@
 // <https://www.gnu.org/licenses/>.
 
 //! Module to wrap the function `gmpmee_spowm`
-use crate::GmpMEEError;
+use crate::{GmpMEEError, usize_to_size_t_type};
 use gmpmee_sys::gmpmee_spowm;
 use rug::Integer;
 use thiserror::Error;
@@ -24,7 +24,7 @@ use thiserror::Error;
 pub enum SPownError {
     #[error("Len of bases {base} is not the same than len of exponents {exponent}")]
     NotSameLen { base: usize, exponent: usize },
-    #[error("exponent len of bases cannot be casted to i64 (in init): {0}")]
+    #[error("exponent len of bases cannot be casted to i32/i64 (in init): {0}")]
     ExponentCast(String),
 }
 
@@ -48,10 +48,8 @@ pub fn spowm(
     let bases_raw = bases.iter().map(|b| b.as_raw()).collect::<Vec<_>>();
     let exponents_raw = exponents.iter().map(|b| b.as_raw()).collect::<Vec<_>>();
     let mut res = Integer::new();
-    let len: i64 = bases
-        .len()
-        .try_into()
-        .map_err(|e: std::num::TryFromIntError| SPownError::ExponentCast(e.to_string()))?;
+    let len =
+        usize_to_size_t_type(bases.len()).map_err(|e| SPownError::ExponentCast(e.to_string()))?;
     let bases_ptr = bases_raw[0];
     let exponents_ptr = exponents_raw[0];
     unsafe {

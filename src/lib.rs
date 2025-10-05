@@ -37,6 +37,7 @@ pub mod miller_rabin;
 pub mod spown;
 use fpowm::FPownError;
 use spown::SPownError;
+use std::num::TryFromIntError;
 use thiserror::Error;
 
 #[derive(Error, Debug, Clone, PartialEq, Eq)]
@@ -45,4 +46,19 @@ pub enum GmpMEEError {
     SPowmParameters(#[from] SPownError),
     #[error("Error in parameters of fpown: {0}")]
     FPowmParameters(#[from] FPownError),
+    #[error("{msg}: {source}")]
+    Cast {
+        msg: String,
+        source: TryFromIntError,
+    },
+}
+
+#[cfg(target_family = "windows")]
+fn usize_to_size_t_type(n: usize) -> Result<i32, TryFromIntError> {
+    n.try_into()
+}
+
+#[cfg(not(target_family = "windows"))]
+fn usize_to_size_t_type(n: usize) -> Result<i64, TryFromIntError> {
+    n.try_into()
 }

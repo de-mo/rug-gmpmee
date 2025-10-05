@@ -12,8 +12,8 @@ readme = "README.md"
 repository = "https://github.com/de-mo/rug-gmpmee"
 
 [dependencies]
-#gmpmee-sys = "0.1.3"
-gmpmee-sys = { path = "../gmpmee-sys" }
+gmpmee-sys = "0.2"
+#gmpmee-sys = { path = "../gmpmee-sys" }
 rug = { version = "1", features = ["rand"] }
 thiserror = "2"
 
