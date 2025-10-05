@@ -44,7 +44,7 @@
 //! assert_eq!(cache_fpown(&e).unwrap(),b.pow_mod(&e, &p).unwrap());
 //! ```
 
-use crate::GmpMEEError;
+use crate::{GmpMEEError, usize_to_size_t_type};
 use gmpmee_sys::{
     gmpmee_fpowm, gmpmee_fpowm_clear, gmpmee_fpowm_init, gmpmee_fpowm_init_precomp,
     gmpmee_fpowm_precomp, gmpmee_fpowm_tab, gmpmee_spowm_tab,
@@ -126,22 +126,18 @@ impl FPowmTable {
         block_width: usize,
         exponent_bitlen: usize,
     ) -> Result<Self, GmpMEEError> {
-        let block_width_i64: i64 =
-            block_width
-                .try_into()
-                .map_err(|e| FPownError::ExponentCast {
-                    method: "FPowmTable::init_precomp",
-                    variable: "block_width",
-                    source: e,
-                })?;
-        let exponent_bitlen_i64: i64 =
-            exponent_bitlen
-                .try_into()
-                .map_err(|e| FPownError::ExponentCast {
-                    method: "FPowmTable::init_precomp",
-                    variable: "exponent_bitlen",
-                    source: e,
-                })?;
+        let block_width_i64 =
+            usize_to_size_t_type(block_width).map_err(|e| FPownError::ExponentCast {
+                method: "FPowmTable::init_precomp",
+                variable: "block_width",
+                source: e,
+            })?;
+        let exponent_bitlen_i64 =
+            usize_to_size_t_type(exponent_bitlen).map_err(|e| FPownError::ExponentCast {
+                method: "FPowmTable::init_precomp",
+                variable: "exponent_bitlen",
+                source: e,
+            })?;
         unsafe {
             let mut tab = get_empty_gmpmee_fpowm_tab();
             let t_ptr = &mut tab;
