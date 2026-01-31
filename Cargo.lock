@@ -270,9 +270,9 @@ dependencies = [
 
 [[package]]
 name = "gmpmee-sys"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b46020e288674a65330330cc9c190bb13eb4d4a4cda743f3f51a36a4aa337c73"
+checksum = "4ba992ea5dbcd0ed851d2928b1efccb824fe7980a818ecb056ff69ab789033fe"
 dependencies = [
  "cc",
  "dirs",
